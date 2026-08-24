@@ -9,9 +9,9 @@ on:
       - 'README.md'
     branches:
       - test
+  schedule:
+   - cron: "0 12 * * *"
 
-env:
- TZ: Asia/Jakarta
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,29 +19,79 @@ jobs:
       fail-fast: false
       matrix:
         kernel_config:
-          - kernel_name: "Teletubies"
+          - kernel_name: "SM6125"
+            kernel_url: "https://github.com/LineageOS/android_kernel_xiaomi_sm6125"
+            kernel_branch: "lineage-23.2"
+            anykernel_branch: "sm6125"
+            tag: "SM6125-23.2"
+            defconfig: "vendor/trinket-perf_defconfig"
+            config: "vendor/xiaomi-trinket.config vendor/laurel_sprout.config"
+            patches_folder: "sm6125"
+            IN_DTBO: "out/arch/arm64/boot/dts/xiaomi/laurel_sprout-trinket-overlay.dtbo"
+
+          - kernel_name: "SM6125 - Ginkgo"
             device: Ginkgo
-            kernel_url: "https://github.com/malkist01/android_kernel_xiaomi_sm6125"
+            kernel_url: "https://github.com/LineageOS/android_kernel_xiaomi_sm6125"
             kernel_branch: "lineage-23.2"
             anykernel_branch: "ginkgo"
-            tag: "Stable"
+            tag: "SM6125-23.2"
             defconfig: "vendor/trinket-perf_defconfig"
             config: "vendor/xiaomi-trinket.config vendor/ginkgo.config"
             patches_folder: "sm6125"
             IN_DTBO: "out/arch/arm64/boot/dts/xiaomi/ginkgo-trinket-overlay.dtbo"
 
+          - kernel_name: "N18.1"
+            kernel_url: "https://github.com/TheSillyOk/kernel_laurel_sprout"
+            kernel_branch: "lineage-18.1"
+            tag: "NoName-18.1"
+            defconfig: "vendor/laurel_sprout-perf_defconfig"
+            python3_patch: true
+
+          - kernel_name: "N-VIC"
+            kernel_url: "https://github.com/TheSillyOk/kernel_laurel_sprout"
+            kernel_branch: "vic"
+            tag: "NoName-VIC"
+            defconfig: "vendor/laurel_sprout-perf_defconfig"
+            python3_patch: true
+
         build:
+          - type: Normal
+            ksu: false
+            exclude: susfs
+            ak3_suffix: ""
+
+#          - type: KSUN
+#            ksu: true
+#            repo: "KernelSU-Next/KernelSU-Next"
+#            folder: "KernelSU-Next"
+#            branch: "legacy"
+#            susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
+#            kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
+#            susfs_kernel_patches: "susfs-2.0.0.patch"
+#            extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
+#            ak3_suffix: "-KSUNext"
+
           - type: ReSukiSU
             ksu: true
             repo: "ReSukiSU/ReSukiSU"
             folder: "KernelSU"
             branch: "main"
-            susfsless_kernel_patches: "scope-min-hooks-v1.9.patch"
+            susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
             extra_configs: "CONFIG_KSU_TOOLKIT_SUPPORT=y"
             susfs_configs: "CONFIG_KSU_SUSFS=y"
             susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
             ak3_suffix: "-SukiSU"
-            kpm: "https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
+#            kpm: "https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/latest/download/patch_linux"
+
+          - type: xxKSU
+            ksu: true
+            exclude: susfs
+            repo: "backslashxx/KernelSU"
+            folder: "KernelSU"
+            branch: "master"
+#            kernel_patches: "scope-min-hooks-v1.9.patch"
+            extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
+            ak3_suffix: "-xxKSU"
 
         susfs: [false]
         exclude:
@@ -138,7 +188,7 @@ jobs:
             patch -p1 < "${{ env.workspace_folder }}/kernel_patches/python3.patch" || true
           fi
 
-          configs="CONFIG_LTO_CLANG=y CONFIG_LTO_CLANG_THIN=y CONFIG_HAVE_LTO_CLANG=y CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y CONFIG_MODVERSIONS=n CONFIG_KPROBES=n CONFIG_TMPFS_XATTR=y"
+          configs="CONFIG_LTO_CLANG=y CONFIG_LTO_CLANG_THIN=y CONFIG_HAVE_LTO_CLANG=y CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y CONFIG_MODVERSIONS=n CONFIG_TMPFS_XATTR=y CONFIG_KALLSYMS_ALL=y CONFIG_KALLSYMS=y"
           if [[ -n "${{ matrix.build.extra_configs }}" ]]; then
             configs="$configs ${{ matrix.build.extra_configs }}"
           fi
@@ -348,15 +398,27 @@ jobs:
           fi
           echo "tg_title=$title" >> $GITHUB_ENV
 
+          KSUN_URL=$(git ls-remote https://github.com/KernelSU-Next/KernelSU-Next.git legacy | awk '{print "https://github.com/KernelSU-Next/KernelSU-Next/commit/"$1}')
+          echo "KSUN_URL=$KSUN_URL" >> $GITHUB_ENV
+          echo "KSUN_V=$(./sh/get_ksuver.sh "KernelSU-Next" "KernelSU-Next" "legacy")" >> $GITHUB_ENV
+
+          RKSU_URL=$(git ls-remote https://github.com/rsuntk/KernelSU HEAD | awk '{print "https://github.com/rsuntk/KernelSU/commit/"$1}')
+          echo "RKSU_URL=$RKSU_URL" >> $GITHUB_ENV
+          echo "RKSU_V=$(./sh/get_ksuver.sh "rsuntk" "KernelSU" "main")" >> $GITHUB_ENV
+
           ReSUKI_URL=$(git ls-remote https://github.com/ReSukiSU/ReSukiSU main | awk '{print "https://github.com/ReSukiSU/ReSukiSU/commit/"$1}')
           echo "ReSUKI_URL=$ReSUKI_URL" >> $GITHUB_ENV
           echo "ReSUKI_V=$(./sh/get_ksuver.sh "ReSukiSu" "ReSukiSU" "main")" >> $GITHUB_ENV
+
+          xxKSU_URL=$(git ls-remote https://github.com/backslashxx/KernelSU HEAD | awk '{print "https://github.com/backslashxx/KernelSU/commit/"$1}')
+          echo "xxKSU_URL=$xxKSU_URL" >> $GITHUB_ENV
+          echo "xxKSU_V=$(./sh/get_ksuver.sh "backslashxx" "KernelSU" "master")" >> $GITHUB_ENV
 
       - name: Generate Release Body
         id: release_body
         run: |
           cat << EOF > release_body.md
-          Kernels w/ KSU forks by @malkist01
+          Kernels w/ KSU forks by @TheSillyOk
 
           Updated: ${{ env.date }}
 
@@ -366,9 +428,13 @@ jobs:
 
           KSU Managers:
           -> ReSukiSU (\`ReSUKI\`) [Manager](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main/Manager-release.zip) [CI Channel](https://t.me/ReSukiSU/4)
+          -> KernelSU-Next (\`KSUN\`): [Releases](https://github.com/rifsxd/KernelSU-Next/releases) / [CI builds](https://t.me/ksunext_ci)
+          -> xx's KernelSU (\`xxKSU\`): [Releases](https://github.com/backslashxx/KernelSU/releases) / [KowSU](https://t.me/kowsu_build)
 
           Versions used for KernelSU variants:
           -> ReSukiSU (\`ReSUKI\`): [${{ env.ReSUKI_V }}](${{ env.ReSUKI.URL }})
+          -> KernelSU Next (\`KSUN\`): [${{ env.KSUN_V }}](${{ env.KSUN_URL }})
+          -> xx's KernelSU (\`xxKSU\`): [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})
 
           ### Unsure about which kernel to choose? [View the README.md file for recommendations](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}?tab=readme-ov-file#kernel-recommendations).
           EOF
@@ -442,4 +508,6 @@ jobs:
             📆 *Released*: ${{ env.date }}
             [Release](https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG }}) • [Workflow run](${{ env.run_url }}) • [Nightly](${{ env.nightly_url }})
             
-            • ReSukiSU (ReSUKI) [${{ env.ReSUKI_V }}](${{ env.ReSUKI_URL }})"
+            • ReSukiSU (ReSUKI) [${{ env.ReSUKI_V }}](${{ env.ReSUKI_URL }})
+            • KernelSU-Next (KSUN) [${{ env.KSUN_V }}](${{ env.KSUN_URL }})
+            • xx's KernelSU (xxKSU) [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})"
