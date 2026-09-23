@@ -77,7 +77,7 @@ jobs:
           echo "patches_url=${{ matrix.kernel_config.patches_url || 'https://github.com/TheSillyOk/kernel_ls_patches' }}" >> $GITHUB_ENV
           echo "patches_branch_arg=${{ matrix.kernel_config.patches_branch && format('-b {0}', matrix.kernel_config.patches_branch) || '' }}" >> $GITHUB_ENV
           echo "patches_folder=${{ matrix.kernel_config.patches_folder || 'noname' }}" >> $GITHUB_ENV
-          echo "anykernel_url=${{ matrix.kernel_config.anykernel_url || 'https://github.com/malkist01/anykernel' }}" >> $GITHUB_ENV
+          echo "anykernel_url=${{ matrix.kernel_config.anykernel_url || 'https://github.com/malkist01/anykernel3' }}" >> $GITHUB_ENV
           echo "anykernel_branch_arg=${{ matrix.kernel_config.anykernel_branch && format('-b {0}', matrix.kernel_config.anykernel_branch) || '' }}" >> $GITHUB_ENV
           echo "kernel_branch_arg=${{ matrix.kernel_config.kernel_branch && format('-b {0}', matrix.kernel_config.kernel_branch) || '' }}" >> $GITHUB_ENV
           echo "susfs_branch=${{ matrix.kernel_config.susfs_branch || 'kernel-4.14' }}" >> $GITHUB_ENV
