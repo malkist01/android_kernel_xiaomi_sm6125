@@ -41,11 +41,13 @@ jobs:
             repo: "ReSukiSU/ReSukiSU"
             folder: "KernelSU"
             branch: "main"
+            susfs_kernel_patches: "susfs-2.0.0.patch susfs-inline-hooks.patch"
             susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
-            extra_configs: "CONFIG_KSU_TOOLKIT_SUPPORT=y"
+            extra_configs: "CONFIG_KPM=y CONFIG_KSU_TOOLKIT_SUPPORT=y"
             susfs_configs: "CONFIG_KSU_SUSFS=y"
             susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
             ak3_suffix: "-ReSUKI"
+            kpm: "https://raw.githubusercontent.com/ShirkNeko/SukiSU_patch/refs/heads/main/kpm/patch_linux"
 
           - type: xxKSU
             ksu: true
@@ -57,7 +59,7 @@ jobs:
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
             ak3_suffix: "-xxKSU"
 
-        susfs: [false]
+        susfs: [true]
         exclude:
           - build:
               exclude: susfs
