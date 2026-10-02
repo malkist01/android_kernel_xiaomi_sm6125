@@ -352,7 +352,7 @@ jobs:
         id: release_body
         run: |
           cat << EOF > release_body.md
-          Kernels w/ KSU forks by @TheSillyOk
+          Kernels w/ KSU forks by @malkist01
 
           Updated: ${{ env.date }}
 
@@ -429,8 +429,8 @@ jobs:
       - name: Send Telegram Notification
         if: always()
         run: |
-          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d "chat_id=@ok_kernel_ci" \
+          curl -X POST "https://api.telegram.org/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendMessage" \
+            -d "chat_id=-5173179904" \
             -d "parse_mode=Markdown" \
             --data-urlencode "text=
             • 🔔 ${{ env.tg_title }}
