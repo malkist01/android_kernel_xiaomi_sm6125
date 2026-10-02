@@ -60,7 +60,7 @@ jobs:
           - type: xxKSU
             ksu: true
             exclude: susfs
-            repo: "Willay24/KernelSU"
+            repo: "TheSillyOk/KernelSU"
             folder: "KernelSU"
             branch: "master"
 #            kernel_patches: "scope-min-hooks-v1.9.patch"
