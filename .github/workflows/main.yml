@@ -41,9 +41,7 @@ jobs:
             repo: "KernelSU-Next/KernelSU-Next"
             folder: "KernelSU-Next"
             branch: "legacy"
-            susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
-            kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
-            susfs_kernel_patches: "susfs-2.0.0.patch"
+            kernel_patches: "seccomp.patch scope-min-hooks-v1.9.patch"
             extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
             ak3_suffix: "-KSUNext"
             
@@ -52,7 +50,6 @@ jobs:
             repo: "ReSukiSU/ReSukiSU"
             folder: "KernelSU"
             branch: "main"
-            susfs_kernel_patches: "susfs-2.1.0.patch"
             susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
             extra_configs: "CONFIG_KPM=y CONFIG_KSU_TOOLKIT_SUPPORT=y"
             susfs_configs: "CONFIG_KSU_SUSFS=y"
@@ -70,7 +67,7 @@ jobs:
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
             ak3_suffix: "-xxKSU"
 
-        susfs: [true]
+        susfs: [false]
         exclude:
           - build:
               exclude: susfs
