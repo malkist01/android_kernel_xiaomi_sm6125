@@ -103,7 +103,7 @@ jobs:
         id: cache-clang
         with:
           path: ${{ env.workspace_folder }}/clang
-          key: clang-r547379-ubuntu-latest
+          key: clang-r614150-ubuntu-latest
 
       - name: Download and Extract Clang
         if: steps.cache-clang.outputs.cache-hit != 'true'
