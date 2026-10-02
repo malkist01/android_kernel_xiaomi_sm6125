@@ -21,9 +21,9 @@ jobs:
           - kernel_name: "SM6125 - Ginkgo"
             device: Ginkgo
             kernel_url: "https://github.com/malkist01/android_kernel_xiaomi_sm6125"
-            kernel_branch: "lineage-23.2"
+            kernel_branch: "lineage-24.0"
             anykernel_branch: "ginkgo"
-            tag: "SM6125-23.2"
+            tag: "SM6125-24.0"
             defconfig: "vendor/trinket-perf_defconfig"
             config: "vendor/xiaomi-trinket.config vendor/ginkgo.config"
             patches_folder: "sm6125"
@@ -109,7 +109,7 @@ jobs:
         if: steps.cache-clang.outputs.cache-hit != 'true'
         working-directory: ${{ env.workspace_folder }}
         run: |
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O clang.tar.gz
+          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
           mkdir -p clang && tar -xf clang.tar.gz -C clang
 
       - name: Set up ccache
