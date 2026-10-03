@@ -60,7 +60,7 @@ jobs:
          - type: xxKSU
            ksu: true
            exclude: susfs
-           repo: "malkist/xxKSU"
+           repo: "malkist01/xxKSU"
            folder: "KernelSU"
            branch: "master"
 #          kernel_patches: "scope-min-hooks-v1.9.patch"
