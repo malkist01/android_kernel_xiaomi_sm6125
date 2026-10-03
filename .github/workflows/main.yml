@@ -426,6 +426,26 @@ jobs:
         run: |
           bash ${{ env.sh_dir }}/upload-assets.sh "${{ env.TAG }}" "${{ env.repo_dir }}" "${{ env.artifacts_dir }}"
 
+      - name: Telegram Notification
+        if: always()
+        run: |
+         TOKEN="8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
+         CHAT="-8809175660"
+        
+         if [ -f "compile.log" ]; then
+           curl -s -F document=@"compile.log" \
+                "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+                -F chat_id="${CHAT}" \
+                -F caption="get_work Log [${{ env.BUILD_TIME }}] - Status: ${{ job.status }}"
+         fi
+
+         if [ -n "${{ env.FINAL_ZIP }}" ] && [ -f "${{ env.FINAL_ZIP }}" ]; then
+           curl -s -F document=@"$ZIP_NAME" \
+               "https://api.telegram.org/bot${TOKEN}/sendDocument" \
+               -F chat_id="${CHAT}" \
+               -F caption="BuildBot Success [${{ env.BUILD_TIME }}]"
+         fi
+
       - name: Send Telegram Notification
         if: always()
         run: |
