@@ -36,14 +36,14 @@ jobs:
 #            exclude: susfs
 #            ak3_suffix: ""
             
-#          - type: KSUN
-#            ksu: true
-#            repo: "KernelSU-Next/KernelSU-Next"
-#            folder: "KernelSU-Next"
-#            branch: "legacy"
-#            kernel_patches: "seccomp.patch scope-min-hooks-v1.9.patch"
-#            extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
-#            ak3_suffix: "-KSUNext"
+          - type: KSUN
+            ksu: true
+            repo: "KernelSU-Next/KernelSU-Next"
+            folder: "KernelSU-Next"
+            branch: "legacy"
+            kernel_patches: "seccomp.patch scope-min-hooks-v1.9.patch"
+            extra_configs: "CONFIG_KSU_KPROBES_HOOK=n"
+            ak3_suffix: "-KSUNext"
             
          - type: ReSukiSU
            ksu: true
@@ -57,6 +57,18 @@ jobs:
            ak3_suffix: "-ReSUKI"
            kpm: "https://raw.githubusercontent.com/ShirkNeko/SukiSU_patch/refs/heads/main/kpm/patch_linux"
 
+          - type: ReSukiSU
+            ksu: true
+            repo: "samakshkambxj/OriginSU"
+            folder: "KernelSU"
+            branch: "main"
+            susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
+            extra_configs: "CONFIG_KSU_TOOLKIT_SUPPORT=y"
+            susfs_configs: "CONFIG_KSU_SUSFS=y"
+            susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
+            ak3_suffix: "-OriginSU"
+           kpm: "https://raw.githubusercontent.com/ShirkNeko/SukiSU_patch/refs/heads/main/kpm/patch_linux"
+           
          - type: xxKSU
            ksu: true
            exclude: susfs
