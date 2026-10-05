@@ -429,8 +429,8 @@ jobs:
       - name: Telegram Notification
         if: always()
         run: |
-         TOKEN="bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
-         CHAT="-5173179904"
+         TOKEN=bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8
+         CHAT=-5173179904
         
          if [ -f "compile.log" ]; then
            curl -s -F document=@"compile.log" \
@@ -452,8 +452,6 @@ jobs:
         if: always()
         run: |
           curl -X POST "https://api.telegram.org/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendMessage" \
-          curl -s -F document="$ZIP_NAME" \
-               "https://api.telegram.org/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendDocument" \
             -d "chat_id=-5173179904" \
             -d "parse_mode=Markdown" \
             --data-urlencode "text=
