@@ -440,7 +440,7 @@ jobs:
          fi
 
          if [ -n "${{ env.FINAL_ZIP }}" ] && [ -f "${{ env.FINAL_ZIP }}" ]; then
-           curl -s -F document=@"$ZIP_NAME" \
+           curl -s -F document="$ZIP_NAME" \
                "https://api.telegram.org/bot${TOKEN}/sendDocument" \
                -F chat_id="${CHAT}" \
                -F caption="BuildBot Success [${{ env.BUILD_TIME }}]"
