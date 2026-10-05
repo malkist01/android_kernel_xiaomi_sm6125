@@ -293,7 +293,7 @@ jobs:
           fi
 
           ZIP_NAME="$(date +"%Y.%m.%d")-${{ env.device }}${BUILD_SUFFIX}-${{ matrix.kernel_config.tag }}-${{ github.run_number }}"
-          echo "anykernel_zipname=$ZIP_NAME" >> $GITHUB_ENV
+          echo "anykernel_zipname=$ZIP_NAME" >> $GITHUB_ENV   
 
       - name: Upload AnyKernel Artifact
         uses: actions/upload-artifact@v6
@@ -429,23 +429,25 @@ jobs:
       - name: Telegram Notification
         if: always()
         run: |
-         TOKEN="8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
-         CHAT="-8809175660"
+         TOKEN="bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
+         CHAT="-5173179904"
         
          if [ -f "compile.log" ]; then
            curl -s -F document=@"compile.log" \
                 "https://api.telegram.org/bot${TOKEN}/sendDocument" \
                 -F chat_id="${CHAT}" \
-                -F caption="get_work Log [${{ env.BUILD_TIME }}] - Status: ${{ job.status }}"
+                -F caption="Alexandra Log [${{ env.BUILD_TIME }}] - Status: ${{ job.status }}"
          fi
 
-         if [ -n "${{ env.FINAL_ZIP }}" ] && [ -f "${{ env.FINAL_ZIP }}" ]; then
-           curl -s -F document="$ZIP_NAME" \
-               "https://api.telegram.org/botorg/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendDocument" \
+         if [ -f "${{ env.FINAL_ZIP }}" ]; then
+           curl -s -F document=@"${{ env.anykernel_zipname }}" \
+               "https://api.telegram.org/bot${TOKEN}/sendDocument" \
                -F chat_id="${CHAT}" \
-               -F caption="BuildBot Success [${{ env.BUILD_TIME }}]"
+               -F caption="imell_imupp [${{ env.BUILD_TIME }}]"
          fi
-
+        
+         ZIP [${{ env.BUILD_TIME }}]"
+         fi
       - name: Send Telegram Notification
         if: always()
         run: |
