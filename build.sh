@@ -8,7 +8,7 @@ exec > >(tee -a build.log) 2>&1
 # ============================
 # Setup
 # ============================
-PHONE="Surya"
+PHONE="Ginkgo"
 DEFCONFIG="vendor/trinket-perf_defconfig"
 CONFIG="vendor/xiaomi-trinket.config vendor/ginkgo.config"
 CLANG="Neutron Clang 19"
