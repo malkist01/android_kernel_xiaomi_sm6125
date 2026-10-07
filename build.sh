@@ -180,7 +180,7 @@ MAKE="./makeparallel"
     echo -e "${green}[+] Build sukses! Packing ZIP...${reset}"
 
     [ ! -d AnyKernel3 ] && git clone -q https://github.com/malkist01/AnyKernel3.git -b ginkgo
-    cp -f "$kernel" AnyKernel3/
+    cp -f "$kernel" "$dtbo" AnyKernel3/
     [ -f "$dtbo" ] && cp -f "$dtbo" AnyKernel3/
     cd AnyKernel3 || return 1
     zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
