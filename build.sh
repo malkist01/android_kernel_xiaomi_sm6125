@@ -19,6 +19,8 @@ COMPILERDIR="$(pwd)/../aosp-clang"
 EXTRA_FOLDER="$(pwd)/../extra"
 export KBUILD_BUILD_USER="Mahiroo"
 export KBUILD_BUILD_HOST="HiraTeam"
+IN_DTBO="out/arch/arm64/boot/dts/xiaomi/ginkgo-trinket-overlay.dtbo"
+mkdir -p "out/arch/arm64/boot/dts/xiaomi/.ginkgo-trinket-overlay.dtbo.qcom-base"
 
 # ============================
 # Variabel Telegram dan Device Info
@@ -34,7 +36,6 @@ DATE="$(date '+%Y-%m-%d %H:%M:%S')"
 MESSAGE_ERROR="Error Build untuk $PHONE Dibatalkan!"
 kernel="out/arch/arm64/boot/Image.gz"
 dtbo="out/arch/arm64/boot/dtbo.img"
-mkdir -p "out/arch/arm64/boot/dts/xiaomi/.ginkgo-trinket-overlay.dtbo.qcom-base"
 
 # ============================
 # Warna output
@@ -46,9 +47,8 @@ reset="\033[0m"
 
 function install_dependencies() {
     echo -e "${cyan}==> Instalasi dependensi...${reset}"
-    sudo apt update
-    sudo apt install -y bc cpio flex bison aptitude git python-is-python3 tar aria2 perl wget curl lz4 libssl-dev device-tree-compiler
-    sudo apt install -y zstd
+    sudo apt-get update -qq
+    sudo apt-get install -y --no-install-recommends python3-pip git zip unzip gcc g++ make ninja-build file bc bison flex libfl-dev libssl-dev libelf-dev wget build-essential python3-dev python3-setuptools rsync ccache llvm-dev libncurses6 libfdt-dev binwalk
 }
 
 function clang() {
@@ -161,16 +161,10 @@ MAKE="./makeparallel"
     DTC=$EXTRA_FOLDER/dtc \
     DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay \
     MKDTIMG=$EXTRA_FOLDER/mkdtimg \
+    CC="ccache clang" \
+    LD=ld.lld \
     LLVM=1 \
     LLVM_IAS=1 \
-    AR=llvm-ar \
-    NM=llvm-nm \
-    LD=ld.lld \
-    OBJCOPY=llvm-objcopy \
-    OBJDUMP=llvm-objdump \
-    STRIP=llvm-strip \
-    CC=clang \
-    DTC_EXT=dtc \
     CROSS_COMPILE=aarch64-linux-gnu- \
     CROSS_COMPILE_ARM32=arm-linux-gnueabi- 2>&1 | tee full-build.log
 
