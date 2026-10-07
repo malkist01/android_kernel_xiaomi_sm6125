@@ -4,6 +4,7 @@
 
 trap 'echo -e "\n\033[91m[!] Build dibatalkan oleh user.\033[0m"; tg_channelcast "⚠️ <b>Build kernel dibatalkan oleh user!</b>"; cleanup_files; exit 1' INT
 exec > >(tee -a build.log) 2>&1
+
 # Setup Patch Defconfig
 echo "CONFIG_KSU=y" >> ./arch/arm64/configs/vendor/trinket-perf_defconfig
 echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> ./arch/arm64/configs/vendor/trinket-perf_defconfig
@@ -16,8 +17,10 @@ echo "CONFIG_HAVE_LTO_CLANG=y" >> ./arch/arm64/configs/vendor/trinket-perf_defco
 echo "CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y" >> ./arch/arm64/configs/vendor/trinket-perf_defconfig
 echo "CONFIG_MODVERSIONS=y" >> ./arch/arm64/configs/vendor/trinket-perf_defconfig
 echo "CONFIG_TMPFS_XATTR=y" >> ./arch/arm64/configs/vendor/trinket-perf_defconfig
+
 # KernelSU
 curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+
 # ============================
 # Setup
 # ============================
