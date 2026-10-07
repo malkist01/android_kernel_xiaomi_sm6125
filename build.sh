@@ -61,7 +61,7 @@ echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
 sleep 2
-git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main "$EXTRA_FOLDER"
+git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main $EXTRA_FOLDER
 wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
     rm -rf $COMPILERDIR 
     mkdir $COMPILERDIR 
@@ -136,7 +136,6 @@ function cleanup_files() {
 function build_kernel() {
     export PATH="$COMPILERDIR/bin:$PATH"
     make -j$(nproc --all) O=out ARCH=arm64 ${DEFCONFIG} ${CONFIG}
-   make O=out DTC_PREBUILT=true DTC=$EXTRA_FOLDER/dtc DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay MKDTIMG=$EXTRA_FOLDER/mkdtimg
     if [ $? -ne 0 ]
 then
     echo -e "\n"
@@ -158,6 +157,10 @@ MAKE="./makeparallel"
    make -j$(nproc --all) \
     O=out \
     ARCH=arm64 \
+    DTC_PREBUILT=true \
+    DTC=$EXTRA_FOLDER/dtc \
+    DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay \
+    MKDTIMG=$EXTRA_FOLDER/mkdtimg \
     LLVM=1 \
     LLVM_IAS=1 \
     AR=llvm-ar \
@@ -215,7 +218,7 @@ function upload_defconfig() {
     [ -f out/full_defconfig ] || return
     cp out/full_defconfig trinket-perf_defconfig
     curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" -F document=@"surya_defconfig" -F caption="Full Defconfig - $ZIPNAME" -F chat_id="$CHAT_ID" > /dev/null
-    rm -f surya_defconfig
+    rm -f trinket-perf_defconfig
 }
 
 # ============================
