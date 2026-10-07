@@ -11,11 +11,12 @@ exec > >(tee -a build.log) 2>&1
 PHONE="Ginkgo"
 DEFCONFIG="vendor/trinket-perf_defconfig"
 CONFIG="vendor/xiaomi-trinket.config vendor/ginkgo.config"
-CLANG="Neutron Clang 19"
-ZIPNAME="Erika-$(date '+%Y%m%d-%H%M').zip"
+CLANG="Aosp Clang 23.0"
+ZIPNAME="KernelTest-Ginkgo-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
 CHAT_ID="-5173179904"
-COMPILERDIR="$(pwd)/../zyc-clang"
+COMPILERDIR="$(pwd)/../aosp-clang"
+EXTRA_FOLDER="$(pwd)/../extra"
 export KBUILD_BUILD_USER="Mahiroo"
 export KBUILD_BUILD_HOST="HiraTeam"
 
@@ -33,6 +34,7 @@ DATE="$(date '+%Y-%m-%d %H:%M:%S')"
 MESSAGE_ERROR="Error Build untuk $PHONE Dibatalkan!"
 kernel="out/arch/arm64/boot/Image.gz"
 dtbo="out/arch/arm64/boot/dtbo.img"
+mkdir -p "out/arch/arm64/boot/dts/xiaomi/.ginkgo-trinket-overlay.dtbo.qcom-base"
 
 # ============================
 # Warna output
@@ -59,11 +61,12 @@ echo -e "\n$red[!] clang Dir Not Found!!!\033[0m \n"
 sleep 2
 echo -e "$green[+] Wait.. Cloning clang...\033[0m \n"
 sleep 2
-wget "$(curl -s https://raw.githubusercontent.com/ZyCromerZ/Clang/main/Clang-main-link.txt)" -O "zyc-clang.tar.gz"
+git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main "$EXTRA_FOLDER"
+wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
     rm -rf $COMPILERDIR 
     mkdir $COMPILERDIR 
-    tar -xvf zyc-clang.tar.gz -C $COMPILERDIR
-    rm -rf zyc-clang.tar.gz
+    tar -xvf clang.tar.gz -C $COMPILERDIR
+    rm -rf clang.tar.gz
 sleep 1
 echo
 echo -e "\n$green[!] Lets's Build UwU...\033[0m \n"
@@ -133,6 +136,7 @@ function cleanup_files() {
 function build_kernel() {
     export PATH="$COMPILERDIR/bin:$PATH"
     make -j$(nproc --all) O=out ARCH=arm64 ${DEFCONFIG} ${CONFIG}
+   make O=out DTC_PREBUILT=true DTC=$EXTRA_FOLDER/dtc DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay MKDTIMG=$EXTRA_FOLDER/mkdtimg
     if [ $? -ne 0 ]
 then
     echo -e "\n"
