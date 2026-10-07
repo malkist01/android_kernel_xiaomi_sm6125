@@ -10,7 +10,8 @@ exec > >(tee -a build.log) 2>&1
 # ============================
 PHONE="Ginkgo"
 DEFCONFIG="vendor/trinket-perf_defconfig"
-CONFIG="vendor/xiaomi-trinket.config vendor/ginkgo.config"
+CONFIG="vendor/xiaomi-trinket.config
+DEF="vendor/ginkgo.config"
 CLANG="Aosp Clang 23.0"
 ZIPNAME="KernelTest-Ginkgo-$(date '+%Y%m%d-%H%M').zip"
 BOT_TOKEN="8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
@@ -135,7 +136,7 @@ function cleanup_files() {
 
 function build_kernel() {
     export PATH="$COMPILERDIR/bin:$PATH"
-    make -j$(nproc --all) O=out ARCH=arm64 ${DEFCONFIG} ${CONFIG}
+    make -j$(nproc --all) O=out ARCH=arm64 ${DEFCONFIG} ${CONFIG} ${DEF}
     if [ $? -ne 0 ]
 then
     echo -e "\n"
