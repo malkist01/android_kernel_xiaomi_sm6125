@@ -68,15 +68,15 @@ jobs:
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
             ak3_suffix: "-xxKSU"
 
-          - type: FinaSU
+          - type: KowSU
             ksu: true
             exclude: susfs
-            repo: "LyraVoid/FinaSU"
+            repo: "KOWX712/KernelSU"
             folder: "KernelSU"
             branch: "master"
 #            kernel_patches: "scope-min-hooks-v1.9.patch"
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
-            ak3_suffix: "-FinaSU"           
+            ak3_suffix: "-KowSU"           
 
         susfs: [false]
         exclude:
