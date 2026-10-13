@@ -36,27 +36,27 @@ jobs:
 #            exclude: susfs
 #            ak3_suffix: ""
             
-          - type: KSUN
-            ksu: true
-            repo: "KernelSU-Next/KernelSU-Next"
-            folder: "KernelSU-Next"
-            branch: "legacy"
-            susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
-            kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
-            susfs_kernel_patches: "susfs-2.0.0.patch"
-            extra_configs: "CONFIG_KSU_KPROBES_HOOK=n CONFIG_KSU_MANUAL_HOOK=y"
-            ak3_suffix: "-KSUNext"
+#          - type: KSUN
+#            ksu: true
+#            repo: "KernelSU-Next/KernelSU-Next"
+#            folder: "KernelSU-Next"
+#            branch: "legacy"
+#            susfs_ksu_patches: "KSUN/KSUN-SUSFS-2.0.0.patch"
+#            kernel_patches: "seccomp.patch scope-min-hooks-v1.6.patch"
+#            susfs_kernel_patches: "susfs-2.0.0.patch"
+#            extra_configs: "CONFIG_KSU_KPROBES_HOOK=n CONFIG_KSU_MANUAL_HOOK=y"
+#            ak3_suffix: "-KSUNext"
 
-          - type: BakaSU
-            ksu: true
-            repo: "Baka-SU/BakaSU"
-            folder: "KernelSU"
-            branch: "main"
-            susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
-            extra_configs: "CONFIG_KSU_TOOLKIT_SUPPORT=y"
-            susfs_configs: "CONFIG_KSU_SUSFS=y"
-            susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
-            ak3_suffix: "-BakaSU"
+#          - type: BakaSU
+#            ksu: true
+#            repo: "Baka-SU/BakaSU"
+#            folder: "KernelSU"
+#            branch: "main"
+#            susfsless_kernel_patches: "scope-min-hooks-v1.9.patch selinux_stuff.patch"
+#            extra_configs: "CONFIG_KSU_TOOLKIT_SUPPORT=y"
+#            susfs_configs: "CONFIG_KSU_SUSFS=y"
+#            susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
+#            ak3_suffix: "-BakaSU"
 
           - type: xxKSU
             ksu: true
@@ -68,15 +68,15 @@ jobs:
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
             ak3_suffix: "-xxKSU"
 
-          - type: KowSU
+          - type: SU
             ksu: true
             exclude: susfs
-            repo: "Willay24/KernelSU"
+            repo: "malkist02/KernelSU"
             folder: "KernelSU"
             branch: "master"
 #            kernel_patches: "scope-min-hooks-v1.9.patch"
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
-            ak3_suffix: "-KowSU"           
+            ak3_suffix: "-TesSU"           
 
         susfs: [false]
         exclude:
