@@ -351,9 +351,9 @@ jobs:
           echo "RKSU_URL=$RKSU_URL" >> $GITHUB_ENV
           echo "RKSU_V=$(./sh/get_ksuver.sh "rsuntk" "KernelSU" "main")" >> $GITHUB_ENV
 
-          ReSUKI_URL=$(git ls-remote https://github.com/ReSukiSU/ReSukiSU main | awk '{print "https://github.com/ReSukiSU/ReSukiSU/commit/"$1}')
+          ReSUKI_URL=$(git ls-remote https://github.com/Baka-SU/BakaSU main | awk '{print "https://github.com/ReSukiSU/ReSukiSU/commit/"$1}')
           echo "ReSUKI_URL=$ReSUKI_URL" >> $GITHUB_ENV
-          echo "ReSUKI_V=$(./sh/get_ksuver.sh "ReSukiSu" "ReSukiSU" "main")" >> $GITHUB_ENV
+          echo "ReSUKI_V=$(./sh/get_ksuver.sh "BakaSu" "BakaSU" "main")" >> $GITHUB_ENV
 
           xxKSU_URL=$(git ls-remote https://github.com/backslashxx/KernelSU HEAD | awk '{print "https://github.com/backslashxx/KernelSU/commit/"$1}')
           echo "xxKSU_URL=$xxKSU_URL" >> $GITHUB_ENV
@@ -372,7 +372,7 @@ jobs:
           [Github run](${{ env.run_url }}) • [Nightly run](${{ env.nightly_url }}) • CI run n°${{ github.run_number }}
 
           KSU Managers:
-          -> ReSukiSU (\`ReSUKI\`) [Manager](https://nightly.link/ReSukiSU/ReSukiSU/workflows/build-manager/main/Manager-release.zip) [CI Channel](https://t.me/ReSukiSU/4)
+          -> BakaSU (\`ReSUKI\`) [Manager](https://nightly.link/Baka-SU/BakaSU/workflows/build-manager/main/Manager-release.zip) [CI Channel](https://t.me/BakaSU/4)
           -> xx's KernelSU (\`xxKSU\`): [Releases](https://github.com/backslashxx/KernelSU/releases) / [KowSU](https://t.me/kowsu_build)
 
           Versions used for KernelSU variants:
@@ -473,5 +473,5 @@ jobs:
             📆 *Released*: ${{ env.date }}
             [Release](https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG }}) • [Workflow run](${{ env.run_url }}) • [Nightly](${{ env.nightly_url }})
             
-            • ReSukiSU (ReSUKI) [${{ env.ReSUKI_V }}](${{ env.ReSUKI_URL }})
+            • BakaSU (ReSUKI) [${{ env.ReSUKI_V }}](${{ env.ReSUKI_URL }})
             • xx's KernelSU (xxKSU) [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})"
