@@ -440,8 +440,8 @@ jobs:
       - name: Telegram Notification
         if: always()
         run: |
-         TOKEN=bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8
-         CHAT=-5173179904
+         TOKEN="bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
+         CHAT="-5173179904"
         
          if [ -f "compile.log" ]; then
            curl -s -F document=@"compile.log" \
@@ -450,7 +450,7 @@ jobs:
                 -F caption="Alexandra Log [${{ env.BUILD_TIME }}] - Status: ${{ job.status }}"
          fi
 
-         if [ -f "${{ env.FINAL_ZIP }}" ]; then
+         if [ -f "${{ env.ZIP_NAME }}" ]; then
            curl -s -F document=@"${{ env.anykernel_zipname }}" \
                "https://api.telegram.org/bot${TOKEN}/sendDocument" \
                -F chat_id="${CHAT}" \
