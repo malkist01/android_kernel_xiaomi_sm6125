@@ -58,17 +58,17 @@ jobs:
 #            susfsless_configs: "CONFIG_KSU_MANUAL_HOOK=y"
 #            ak3_suffix: "-BakaSU"
 
-          - type: xxKSU
-            ksu: true
-            exclude: susfs
-            repo: "backslashxx/KernelSU"
-            folder: "KernelSU"
-            branch: "master"
+#          - type: xxKSU
+#            ksu: true
+#            exclude: susfs
+#            repo: "backslashxx/KernelSU"
+#            folder: "KernelSU"
+#            branch: "master"
 #            kernel_patches: "scope-min-hooks-v1.9.patch"
-            extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
-            ak3_suffix: "-xxKSU"
+#            extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
+#            ak3_suffix: "-xxKSU"
 
-          - type: SU
+          - type: MalkistSU
             ksu: true
             exclude: susfs
             repo: "malkist02/KernelSU"
@@ -76,7 +76,7 @@ jobs:
             branch: "master"
 #            kernel_patches: "scope-min-hooks-v1.9.patch"
             extra_configs: "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y"
-            ak3_suffix: "-TesSU"           
+            ak3_suffix: "-MalkistSU"           
 
         susfs: [false]
         exclude:
