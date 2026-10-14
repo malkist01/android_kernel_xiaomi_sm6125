@@ -323,7 +323,7 @@ jobs:
         with:
           path: ./downloaded-artifacts
 
-        - name: Set Release Variables
+      - name: Set Release Variables
         id: release_vars
         run: |
           echo "date=$(date +"%d/%m/%Y")" >> $GITHUB_ENV
