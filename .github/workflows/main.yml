@@ -323,7 +323,7 @@ jobs:
         with:
           path: ./downloaded-artifacts
 
-      - name: Set Release Variables
+        - name: Set Release Variables
         id: release_vars
         run: |
           echo "date=$(date +"%d/%m/%Y")" >> $GITHUB_ENV
@@ -351,9 +351,9 @@ jobs:
           echo "RKSU_URL=$RKSU_URL" >> $GITHUB_ENV
           echo "RKSU_V=$(./sh/get_ksuver.sh "rsuntk" "KernelSU" "main")" >> $GITHUB_ENV
 
-          ReSUKI_URL=$(git ls-remote https://github.com/Baka-SU/BakaSU main | awk '{print "https://github.com/ReSukiSU/ReSukiSU/commit/"$1}')
-          echo "ReSUKI_URL=$ReSUKI_URL" >> $GITHUB_ENV
-          echo "ReSUKI_V=$(./sh/get_ksuver.sh "BakaSu" "BakaSU" "main")" >> $GITHUB_ENV
+          BakaSU_URL=$(git ls-remote https://github.com/Baka-SU/BakaSU main | awk '{print "https://github.com/Baka-SU/BakaSU/commit/"$1}')
+          echo "BakaSU_URL=$BakaSU_URL" >> $GITHUB_ENV
+          echo "BakaSU_V=$(./sh/get_ksuver.sh "Baka-SU" "BakaSU" "main")" >> $GITHUB_ENV
 
           xxKSU_URL=$(git ls-remote https://github.com/backslashxx/KernelSU HEAD | awk '{print "https://github.com/backslashxx/KernelSU/commit/"$1}')
           echo "xxKSU_URL=$xxKSU_URL" >> $GITHUB_ENV
@@ -372,11 +372,13 @@ jobs:
           [Github run](${{ env.run_url }}) • [Nightly run](${{ env.nightly_url }}) • CI run n°${{ github.run_number }}
 
           KSU Managers:
-          -> BakaSU (\`ReSUKI\`) [Manager](https://nightly.link/Baka-SU/BakaSU/workflows/build-manager/main/Manager-release.zip) [CI Channel](https://t.me/BakaSU/4)
+          -> BakaSU (\`BakaSU\`) [Manager](https://nightly.link/Baka-SU/BakaSU/workflows/build-manager/main/Manager-release.zip) [CI Channel](https://t.me/BakaSU_Grp/4)
+          -> KernelSU-Next (\`KSUN\`): [Releases](https://github.com/rifsxd/KernelSU-Next/releases) / [CI builds](https://t.me/ksunext_ci)
           -> xx's KernelSU (\`xxKSU\`): [Releases](https://github.com/backslashxx/KernelSU/releases) / [KowSU](https://t.me/kowsu_build)
 
           Versions used for KernelSU variants:
-          -> ReSukiSU (\`ReSUKI\`): [${{ env.ReSUKI_V }}](${{ env.ReSUKI.URL }})
+          -> BakaSU (\`BakaSU\`): [${{ env.BakaSU_V }}](${{ env.BakaSU.URL }})
+          -> KernelSU Next (\`KSUN\`): [${{ env.KSUN_V }}](${{ env.KSUN_URL }})
           -> xx's KernelSU (\`xxKSU\`): [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})
 
           ### Unsure about which kernel to choose? [View the README.md file for recommendations](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }}?tab=readme-ov-file#kernel-recommendations).
@@ -437,28 +439,6 @@ jobs:
         run: |
           bash ${{ env.sh_dir }}/upload-assets.sh "${{ env.TAG }}" "${{ env.repo_dir }}" "${{ env.artifacts_dir }}"
 
-      - name: Telegram Notification
-        if: always()
-        run: |
-         TOKEN="bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8"
-         CHAT="-5173179904"
-        
-         if [ -f "compile.log" ]; then
-           curl -s -F document=@"compile.log" \
-                "https://api.telegram.org/bot${TOKEN}/sendDocument" \
-                -F chat_id="${CHAT}" \
-                -F caption="Alexandra Log [${{ env.BUILD_TIME }}] - Status: ${{ job.status }}"
-         fi
-
-         if [ -f "${{ env.ZIP_NAME }}" ]; then
-           curl -s -F document=@"${{ env.anykernel_zipname }}" \
-               "https://api.telegram.org/bot${TOKEN}/sendDocument" \
-               -F chat_id="${CHAT}" \
-               -F caption="imell_imupp [${{ env.BUILD_TIME }}]"
-         fi
-        
-         ZIP [${{ env.BUILD_TIME }}]"
-         fi
       - name: Send Telegram Notification
         if: always()
         run: |
@@ -472,6 +452,6 @@ jobs:
             📌 *Tag*: ${{ env.TAG }}
             📆 *Released*: ${{ env.date }}
             [Release](https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG }}) • [Workflow run](${{ env.run_url }}) • [Nightly](${{ env.nightly_url }})
-            
-            • BakaSU (ReSUKI) [${{ env.ReSUKI_V }}](${{ env.ReSUKI_URL }})
-            • xx's KernelSU (xxKSU) [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})"
+            • BakaSU (BakaSU) [${{ env.BakaSU_V }}](${{ env.BakaSU_URL }})
+            • KernelSU-Next (KSUN) [${{ env.KSUN_V }}](${{ env.KSUN_URL }})
+            • xx's KernelSU (xxKSU) [${{ env.xxKSU_V }}](${{ env.xxKSU_URL }})" 
