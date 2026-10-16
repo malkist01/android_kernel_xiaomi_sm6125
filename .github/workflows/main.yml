@@ -191,6 +191,7 @@ jobs:
         working-directory: ${{ env.kernel_folder }}
         run: |
           set -e
+          curl -LSs "https://raw.githubusercontent.com/RapliVx/E.V.A/main/kernel/setup.sh" | bash -s main
           curl -LSs "https://raw.githubusercontent.com/${{ env.ksu_repo }}/${{ env.ksu_branch }}/kernel/setup.sh" | bash -s ${{ env.ksu_branch }}
 
           if [[ -n "${{ matrix.build.susfsless_kernel_patches }}" && "${{ matrix.susfs }}" != "true" ]]; then
