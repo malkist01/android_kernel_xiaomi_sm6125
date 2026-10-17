@@ -24,17 +24,19 @@ jobs:
 
     - name: Clone Toolchains
       run: |
-        wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
-          mkdir -p clang && tar -xf clang.tar.gz -C clang
-        git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9 gcc64
-        git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9 gcc32
+        mkdir clang && cd clang
+        curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
+        chmod a+x antman
+        ./antman -S
+        ./antman --patch=glibc
+        cd ..
+        git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main "$EXTRA_FOLDER"
 
     - name: Setup Environment Variables
       run: |
         echo "BUILD_TIME=$(TZ=Asia/Jakarta date '+%d-%m-%Y')" >> $GITHUB_ENV
         echo "CLANG_PATH=$GITHUB_WORKSPACE/clang" >> $GITHUB_ENV
-        echo "GCC64_PATH=$GITHUB_WORKSPACE/gcc64" >> $GITHUB_ENV
-        echo "GCC32_PATH=$GITHUB_WORKSPACE/gcc32" >> $GITHUB_ENV
+        echo "EXTRA_FOLDER=$GITHUB_WORKSPACE/extra" >> $GITHUB_ENV
 
     - name: Clone KernelSU
       run: |
@@ -47,15 +49,13 @@ jobs:
     - name: Build Kernel
       run: |
         export ARCH=arm64
-        export PATH="$CLANG_PATH/bin:$GCC64_PATH/bin:$GCC32_PATH/bin:$PATH"
+        export PATH="$CLANG_PATH/bin:$PATH"
         export KBUILD_BUILD_USER=Malkist
         export KBUILD_BUILD_HOST=Android
         export KBUILD_COMPILER_STRING="$($CLANG_PATH/bin/clang --version | head -n 1)"
+        mkdir -p "out/arch/arm64/boot/dts/xiaomi/.ginkgo-trinket-overlay.dtbo.qcom-base"
         make O=out ARCH=arm64 vendor/trinket-perf_defconfig vendor/xiaomi-trinket.config vendor/ksu.config vendor/ginkgo.config
-        make -j$(nproc) O=out ARCH=arm64 LLVM=1 LLVM_IAS=1 CC=clang \
-          CLANG_TRIPLE=aarch64-linux-gnu- \
-          CROSS_COMPILE=$GCC64_PATH/bin/aarch64-elf- \
-          CROSS_COMPILE_ARM32=$GCC32_PATH/bin/arm-eabi-
+        make O=out DTC_PREBUILT=true DTC=$EXTRA_FOLDER/dtc DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay MKDTIMG=$EXTRA_FOLDER/mkdtimg CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 -j"$(nproc --all)" CROSS_COMPILE=aarch64-linux-gnu-
           
     - name: Clone Anykernel3
       run: |
