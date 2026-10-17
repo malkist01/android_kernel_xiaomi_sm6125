@@ -80,5 +80,5 @@ jobs:
           curl -X POST "https://api.telegram.org/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendDocument" \
           -F chat_id=-5173179904 \
           -F message_thread_id=120979 \
-          -F document=@"Teletubies-K4.19-mido-${{ env.BUILD_TIME }}.zip" \
+          -F document=@"Teletubies-KSU-ginkgo-${{ env.BUILD_TIME }}.zip" \
           -F caption=" Last Version is Cumming "
