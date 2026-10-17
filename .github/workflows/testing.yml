@@ -45,6 +45,8 @@ jobs:
       run: |
         curl -LSs "https://raw.githubusercontent.com/RapliVx/E.V.A/main/kernel/setup.sh" | bash -s main
         curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+        curl https://github.com/Willay24/KernelSU/commit/6b148981624347e4fce8e33372ff7694a8b13571.patch | patch -p1
+        curl https://github.com/Willay24/KernelSU/commit/e60e5b234bb50f41076f6036ba25229e956d293b.patch | patch -p1
 
     - name: Set Build Start Time
       run: echo "BUILD_START=$(date +%s)" >> $GITHUB_ENV
