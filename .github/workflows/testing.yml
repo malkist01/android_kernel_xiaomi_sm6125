@@ -24,7 +24,7 @@ jobs:
 
     - name: Clone Toolchains
       run: |
-          git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main "$EXTRA_FOLDER"
+          git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
           wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
           mkdir -p clang && tar -xf clang.tar.gz -C clang
 
