@@ -64,7 +64,6 @@ jobs:
       run: |
           git clone --depth=1 https://github.com/malkist01/anykernel3 -b ginkgo AnyKernel3 
           cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
-          cp out/arch/arm64/boot/dtbo.img AnyKernel3/dtbo.img
           cd AnyKernel3
           zip -r "../Teletubies-KSU-ginkgo-${{ env.BUILD_TIME }}.zip" *
           
