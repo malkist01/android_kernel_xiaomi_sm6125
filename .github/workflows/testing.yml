@@ -25,7 +25,7 @@ jobs:
     - name: Clone Toolchains
       run: |
           git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
-          wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/747f0cceb48f48bf7cf497a3e01af1389266904b/clang-r614150.tar.gz -O clang.tar.gz
+          wget https://github.com/greenforce-project/greenforce_clang/releases/download/20261017/gf-clang-24.0.0-20261017.tar.gz -O clang.tar.gz
           mkdir -p clang && tar -xf clang.tar.gz -C clang
 
     - name: Set up ccache
@@ -43,7 +43,6 @@ jobs:
 
     - name: Clone KernelSU
       run: |
-        curl -LSs "https://raw.githubusercontent.com/RapliVx/E.V.A/main/kernel/setup.sh" | bash -s main
         curl -LSs "https://raw.githubusercontent.com/Willay24/KernelSU/master/kernel/setup.sh" | bash -s master
 
     - name: Set Build Start Time
