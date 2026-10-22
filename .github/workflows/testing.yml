@@ -47,7 +47,7 @@ jobs:
          curl https://github.com/ximi-mojito/android_kernel_xiaomi_mojito/commit/596b4c30d0d6e1d176b9557644569797d7b21185.patch | patch -p1
          curl https://github.com/ximi-mojito/android_kernel_xiaomi_mojito/commit/0cced545ffba22e66f93a2498cbd15bbabe136bc.patch | patch -p1
          curl https://github.com/ximi-mojito/android_kernel_xiaomi_mojito/commit/a94d09d7944e05b27074952c15a9dbdf7b9cc6b4.patch | patch -p1      
-        # curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+        #curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
 
     - name: Set Build Start Time
       run: echo "BUILD_START=$(date +%s)" >> $GITHUB_ENV
