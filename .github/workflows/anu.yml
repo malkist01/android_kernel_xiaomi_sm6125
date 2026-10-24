@@ -1,0 +1,81 @@
+name: Build Kernel
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Kernel
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set Timezone
+      run: |
+        sudo rm /etc/localtime
+        sudo ln -s /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y --no-install-recommends python3-pip git zip unzip gcc g++ make ninja-build file bc bison flex libfl-dev libssl-dev libelf-dev wget build-essential python3-dev python3-setuptools rsync ccache llvm-dev libncurses6 libfdt-dev binwalk
+
+    - name: Clone Toolchains
+      run: |
+          git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
+          curl -Lo gcc-arm64.tar.xz $(curl -s https://api.github.com/repos/mvaisakh/gcc-build/releases/latest | grep browser_download_url | cut -d'"' -f4 | grep 'gcc-arm64-')
+          mkdir -clang && tar -xf gcc-arm64.tar.xz
+          
+    - name: Set up ccache
+      run: |
+        ccache --max-size=2G
+        ccache --set-config=compression=true
+        echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
+
+
+    - name: Setup Environment Variables
+      run: |
+        echo "BUILD_TIME=$(TZ=Asia/Jakarta date '+%d-%m-%Y')" >> $GITHUB_ENV
+        echo "CLANG_PATH=$GITHUB_WORKSPACE/clang" >> $GITHUB_ENV
+        echo "EXTRA_FOLDER=$GITHUB_WORKSPACE/extra" >> $GITHUB_ENV
+
+    - name: Clone KernelSU
+      run: |
+        curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+
+    - name: Set Build Start Time
+      run: echo "BUILD_START=$(date +%s)" >> $GITHUB_ENV
+
+    - name: Build Kernel
+      run: |
+        export ARCH=arm64
+        export PATH="$CLANG_PATH/bin:$PATH"
+        export KBUILD_BUILD_USER=Malkist
+        export KBUILD_BUILD_HOST=Android
+        export KBUILD_COMPILER_STRING="$($CLANG_PATH/bin/clang --version | head -n 1)"
+        mkdir -p "out/arch/arm64/boot/dts/xiaomi/.ginkgo-trinket-overlay.dtbo.qcom-base"
+        make O=out ARCH=arm64 vendor/trinket-perf_defconfig vendor/xiaomi-trinket.config vendor/ksu.config vendor/ginkgo.config
+        make O=out DTC_PREBUILT=true DTC=$EXTRA_FOLDER/dtc DTC_OVERLAY_TEST_EXT=$EXTRA_FOLDER/ufdt_apply_overlay MKDTIMG=$EXTRA_FOLDER/mkdtimg CC=aarch64-elf-gcc LD="${clang}"/bin/aarch64-elf-ld.lld AR=aarch64-elf-ar AS=aarch64-elf-as NM=aarch64-elf-nm OBJDUMP=aarch64-elf-objdump OBJCOPY=aarch64-elf-objcopy j"$(nproc --all)" CROSS_COMPILE=aarch64-elf-
+          
+    - name: Clone Anykernel3
+      run: |
+          git clone --depth=1 https://github.com/malkist01/anykernel3 -b ginkgo AnyKernel3 
+          cp out/arch/arm64/boot/Image.gz AnyKernel3/Image.gz
+          cd AnyKernel3
+          zip -r "../Teletubies-KSU-ginkgo-${{ env.BUILD_TIME }}.zip" *
+          
+    - name: Upload Flashable zip
+      uses: actions/upload-artifact@v4
+      with:
+           name: Teletubies-KSU-ginkgo-${{ env.BUILD_TIME }}
+           path: AnyKernel3/*
+           
+    - name: Send to Telegram
+      run: |
+          curl -X POST "https://api.telegram.org/bot8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8/sendDocument" \
+          -F chat_id=-5173179904 \
+          -F message_thread_id=120979 \
+          -F document=@"Teletubies-KSU-ginkgo-${{ env.BUILD_TIME }}.zip" \
+          -F caption=" Last Version is Cumming "
