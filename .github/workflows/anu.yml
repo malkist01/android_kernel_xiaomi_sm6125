@@ -25,8 +25,8 @@ jobs:
     - name: Clone Toolchains
       run: |
           git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
-          curl -Lo gcc-arm64.tar.xz $(curl -s https://api.github.com/repos/mvaisakh/gcc-build/releases/latest | grep browser_download_url | cut -d'"' -f4 | grep 'gcc-arm64-')
-          mkdir clang && tar -xf gcc-arm64.tar.xz -C clang
+          wget https://github.com/mvaisakh/gcc-build/releases/download/18102026/eva-gcc-arm64-18102026.xz -O eva-gcc-arm64-18102026.xz
+          mkdir -p clang && tar -xf eva-gcc-arm64-18102026.xz -C clang
           
     - name: Set up ccache
       run: |
