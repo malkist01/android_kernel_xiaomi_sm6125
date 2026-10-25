@@ -26,7 +26,7 @@ jobs:
       run: |
           git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
           curl -Lo gcc-arm64.tar.xz $(curl -s https://api.github.com/repos/mvaisakh/gcc-build/releases/latest | grep browser_download_url | cut -d'"' -f4 | grep 'gcc-arm64-')
-          mkdir -clang && tar -xf gcc-arm64.tar.xz
+          mkdir clang && tar -xf gcc-arm64.tar.xz -C clang
           
     - name: Set up ccache
       run: |
