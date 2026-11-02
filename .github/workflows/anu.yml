@@ -24,9 +24,8 @@ jobs:
 
     - name: Clone Toolchains
       run: |
-          git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
-          wget https://github.com/mvaisakh/gcc-build/releases/download/18102026/eva-gcc-arm64-18102026.xz -O eva-gcc-arm64-18102026.xz
-          mkdir -p clang && tar -xf eva-gcc-arm64-18102026.xz -C clang
+          wget https://github.com/greenforce-project/greenforce_clang/releases/download/20261017/gf-clang-24.0.0-20261017.tar.gz -O clang.tar.gz
+          mkdir -p clang && tar -xf clang.tar.gz -C clang
           
     - name: Set up ccache
       run: |
@@ -39,7 +38,6 @@ jobs:
       run: |
         echo "BUILD_TIME=$(TZ=Asia/Jakarta date '+%d-%m-%Y')" >> $GITHUB_ENV
         echo "CLANG_PATH=$GITHUB_WORKSPACE/clang" >> $GITHUB_ENV
-        echo "EXTRA_FOLDER=$GITHUB_WORKSPACE/extra" >> $GITHUB_ENV
 
     - name: Clone KernelSU
       run: |
