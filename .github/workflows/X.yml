@@ -3,15 +3,15 @@ on:
   workflow_dispatch:
     inputs:
       DEPLOY_DEVICE_TYPE:
-        description: 'Deploy Device Type (COURBET/DAVINCI/PHOENIX/SWEET/SWEETK6A)'
+        description: 'Deploy Device Type (GINKGO/DAVINCI/PHOENIX/SWEET/SWEETK6A)'
         required: true
       DEPLOY_TAG_TYPE:
         description: 'Deploy Kernel version tag (example: v1 or v2)'
         required: true
         
 env:
-  CHATID: ${{ secrets.CHAT_ID }}
-  API_BOT: ${{ secrets.BOT_API }}
+  CHATID: -5173179904
+  API_BOT: 8691384652:AAHbKtOpbMp-Kc9JvKyil4aPsMfo5hdA-F8
   DEVICE_TYPE: ${{ github.event.inputs.DEPLOY_DEVICE_TYPE }}
   KERNEL_VERSION_TAG: ${{ github.event.inputs.DEPLOY_TAG_TYPE }}
 
@@ -41,7 +41,7 @@ jobs:
 
     - name: Building Kernel..
       run: |
-          curl https://raw.githubusercontent.com/itsshashanksp/Scripts/main/kernel.sh > kernel.sh
+          curl https://raw.githubusercontent.com/malkist02/Scripts/main/kernel.sh > kernel.sh
           chmod +x kernel.sh
           bash kernel.sh
       shell: bash
