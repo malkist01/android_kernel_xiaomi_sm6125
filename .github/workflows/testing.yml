@@ -43,7 +43,6 @@ jobs:
     - name: Clone KernelSU
       run: |
          curl -LSs "https://raw.githubusercontent.com/manipvlator/KernelSU/main/kernel/setup.sh" | bash -s main
-         curl -LSs https://raw.githubusercontent.com/maxsteeel/nomount/refs/heads/master/kernel/setup.sh | bash -s master
 
     - name: Set Build Start Time
       run: echo "BUILD_START=$(date +%s)" >> $GITHUB_ENV
