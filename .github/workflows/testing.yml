@@ -24,6 +24,7 @@ jobs:
 
     - name: Clone Toolchains
       run: |
+          git clone --depth=1 https://github.com/TheSillyOk/kernel_extra -b main extra
           wget https://github.com/greenforce-project/greenforce_clang/releases/download/20261017/gf-clang-24.0.0-20261017.tar.gz -O clang.tar.gz
           mkdir -p clang && tar -xf clang.tar.gz -C clang
 
