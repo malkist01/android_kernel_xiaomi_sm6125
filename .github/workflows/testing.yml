@@ -43,7 +43,7 @@ jobs:
 
     - name: Clone KernelSU
       run: |
-         wget https://github.com/manipvlator/los_kernel_xiaomi_sm6150/commit/9b21e3df6c0ae2195dc9246568cf85e8b7992269.patch && git apply 9b21e3df6c0ae2195dc9246568cf85e8b7992269.patch
+         wget https://github.com/manipvlator/los_kernel_xiaomi_sm6150/commit/c931cae8ca19e4b738e3d9eda8fec4cdb7947473.patch && git apply c931cae8ca19e4b738e3d9eda8fec4cdb7947473.patch
          curl -LSs "https://raw.githubusercontent.com/manipvlator/KernelSU/main/kernel/setup.sh" | bash -s main
          curl -LSs https://raw.githubusercontent.com/maxsteeel/nomount/refs/heads/master/kernel/setup.sh | bash -s master
 
