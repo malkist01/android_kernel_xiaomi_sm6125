@@ -3,7 +3,6 @@
 #include <linux/init.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
-#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
 #include <asm/setup.h>
 
 #if defined(CONFIG_INITRAMFS_IGNORE_SKIP_FLAG) || \
@@ -34,7 +33,18 @@ static void proc_command_line_init(void) {
 		memcpy(offset_addr, INITRAMFS_STR_REPLACE, INITRAMFS_STR_LEN);
 #endif
 
+#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
+extern int susfs_spoof_cmdline_or_bootconfig(struct seq_file *m);
+#endif
 
+static int cmdline_proc_show(struct seq_file *m, void *v)
+{
+#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
+	if (!susfs_spoof_cmdline_or_bootconfig(m)) {
+		seq_putc(m, '\n');
+		return 0;
+	}
+#endif
 #ifdef CONFIG_PROC_CMDLINE_APPEND_ANDROID_FORCE_NORMAL_BOOT
 	if (strstr(saved_command_line, INITRAMFS_STR_FIND)) {
 		// point proc_command_line_tail to the null terminator of the cmdline
@@ -45,11 +55,6 @@ static void proc_command_line_init(void) {
 	}
 #endif
 }
-
-#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
-extern struct static_key_false susfs_is_fake_cmdline_or_bootconfig_buffer_set;
-extern void susfs_spoof_cmdline_or_bootconfig(struct seq_file *m);
-#endif
 
 static int cmdline_proc_show(struct seq_file *m, void *v)
 {
