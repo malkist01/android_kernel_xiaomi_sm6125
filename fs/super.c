@@ -36,9 +36,10 @@
 #include <linux/fsnotify.h>
 #include <linux/lockdep.h>
 #include <linux/user_namespace.h>
-#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+#ifdef CONFIG_KSU_SUSFS
 #include <linux/susfs_def.h>
-#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+#include <linux/jump_label.h>
+#endif // #ifdef CONFIG_KSU_SUSFS
 #include "internal.h"
 
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
@@ -898,22 +899,6 @@ int do_remount_sb2(struct vfsmount *mnt, struct super_block *sb, int sb_flags, v
 	smp_wmb();
 	sb->s_readonly_remount = 0;
 
-#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-	if (static_branch_unlikely(&susfs_is_sdcard_android_data_not_decrypted)) {
-		if (susfs_is_current_ksu_domain()) {
-			dev = ida_alloc_range(&unnamed_dev_ida, DEFAULT_KSU_MNT_MINOR_DEV, (1 << MINORBITS) - 1,
-				GFP_ATOMIC);
-			if (dev == -ENOSPC)
-				dev = -EMFILE;
-			if (dev < 0)
-				return dev;
-
-			*p = MKDEV(0, dev);
-			return 0;
-		}
-	}
-#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-
 	/*
 	 * Some filesystems modify their metadata via some other path than the
 	 * bdev buffer cache (eg. use a private mapping, or directories in
@@ -994,6 +979,22 @@ int get_anon_bdev(dev_t *p)
 {
 	int dev;
 	int error;
+
+#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+	if (static_branch_unlikely(&susfs_is_sdcard_android_data_not_decrypted)) {
+		if (susfs_is_current_ksu_domain()) {
+			dev = ida_simple_get(&unnamed_dev_ida, DEFAULT_KSU_MNT_MINOR_DEV,
+					     (1 << MINORBITS), GFP_ATOMIC);
+			if (dev == -ENOSPC)
+				dev = -EMFILE;
+			if (dev < 0)
+				return dev;
+
+			*p = MKDEV(0, dev);
+			return 0;
+		}
+	}
+#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 
  retry:
 	if (ida_pre_get(&unnamed_dev_ida, GFP_ATOMIC) == 0)
