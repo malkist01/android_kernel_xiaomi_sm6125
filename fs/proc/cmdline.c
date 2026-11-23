@@ -33,18 +33,7 @@ static void proc_command_line_init(void) {
 		memcpy(offset_addr, INITRAMFS_STR_REPLACE, INITRAMFS_STR_LEN);
 #endif
 
-#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
-extern int susfs_spoof_cmdline_or_bootconfig(struct seq_file *m);
-#endif
 
-static int cmdline_proc_show(struct seq_file *m, void *v)
-{
-#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
-	if (!susfs_spoof_cmdline_or_bootconfig(m)) {
-		seq_putc(m, '\n');
-		return 0;
-	}
-#endif
 #ifdef CONFIG_PROC_CMDLINE_APPEND_ANDROID_FORCE_NORMAL_BOOT
 	if (strstr(saved_command_line, INITRAMFS_STR_FIND)) {
 		// point proc_command_line_tail to the null terminator of the cmdline
@@ -59,6 +48,22 @@ static int cmdline_proc_show(struct seq_file *m, void *v)
 static int cmdline_proc_show(struct seq_file *m, void *v)
 {
 	seq_printf(m, "%s\n", proc_command_line);
+	return 0;
+}
+
+#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
+extern int susfs_spoof_cmdline_or_bootconfig(struct seq_file *m);
+#endif
+
+static int cmdline_proc_show(struct seq_file *m, void *v)
+{
+#ifdef CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
+	if (!susfs_spoof_cmdline_or_bootconfig(m)) {
+		seq_putc(m, '\n');
+		return 0;
+	}
+#endif
+	seq_printf(m, "%s\n", saved_command_line);
 	return 0;
 }
 
